@@ -1,0 +1,77 @@
+ package EP;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+@WebServlet("/loginServlet")
+public class loginServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/*protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String userName=request.getParameter("uid");
+		String password=request.getParameter("pass");
+		
+		try {
+		List<customer> cusDetails=customerDBUtil.validate(userName, password);
+		request.setAttribute("cusDetails", cusDetails);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		RequestDispatcher dis=request.getRequestDispatcher("useraccount.jsp");
+		dis.forward(request, response);
+	}
+	
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request,response);
+	}
+
+}*/
+	
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    response.sendRedirect("login.jsp"); // or wherever your login form is
+	}
+
+
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    
+    String userName = request.getParameter("uid");
+    String password = request.getParameter("pass");
+
+    try {
+        // Check if the user is admin
+        if ("cid001".equals(userName) && "nth123".equals(password)) {
+            // Valid admin credentials, forward to admin dashboard
+        	RequestDispatcher dis=request.getRequestDispatcher("admin.jsp");
+    		dis.forward(request, response);
+        } else {
+            // Validate regular user credentials from database
+        	List<customer> cusDetails=customerDBUtil.validate(userName, password);
+    		request.setAttribute("cusDetails", cusDetails);
+
+            if (cusDetails != null && !cusDetails.isEmpty()) {
+                // If user details are valid, forward to User account page
+                RequestDispatcher dis = request.getRequestDispatcher("useraccount.jsp");
+                dis.forward(request, response);
+            } else {
+                // If validation fails, forward to login error page
+                RequestDispatcher dis = request.getRequestDispatcher("wrong.jsp");
+                dis.forward(request, response);
+            }
+        }
+    } catch(Exception e) {
+        e.printStackTrace();
+    }
+}
+}
+

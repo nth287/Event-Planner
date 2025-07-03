@@ -1,0 +1,86 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<link rel="stylesheet" type="text/css" href="styles1.css">
+
+</head>
+<body>
+<div class="header">
+<h2>Payment</h2>
+
+<input type="text" id="searchInput" placeholder="search...">
+</div>
+	<table>
+               <tr>
+                     <th>Payment ID</th>
+                     <th>Event ID</th>
+                     <th>Event Name</th>
+                     <th>Event Date</th>
+                     <th>Amount</th>
+                     <th>Status</th>
+                     <th>Action</th>
+                     <th>Action</th>
+               </tr>
+               <c:forEach var="payment" items="${allPayments}"> 
+               <tr>
+               		 <td>${payment.paymentid}</td>
+                     <td>${payment.eventid}</td>
+                     <td>${payment.eventname}</td>
+                     <td>${payment.eventdate}</td>
+                     <td>${payment.amount}</td>
+                     <td>${payment.status}</td>
+                    
+                      <td>
+                      <a href="update.jsp?paymentid=${payment.paymentid}&eventid=${payment.eventid}&eventname=${payment.eventname}&eventdate=${payment.eventdate}&amount=${payment.amount}&status=${payment.status}">
+                     	<button>Update</button>
+                      </a>
+                      </td>
+                      
+                      <td>
+                      <form action="DeleteServlet" method="post">
+                      <input type="hidden"name="paymentid" value="${payment.paymentid}" /> 
+                      <button>Delete</button>
+                      </form>
+                      </td>
+            	     
+              </tr>
+              </c:forEach>
+              
+              
+    </table>
+    
+    <script>
+    
+function filterTable(){
+	var input,filter,table,tr,td,i,txtvalue;
+	input = document.getElementById("searchInput");
+	filter = input.value.toUpperCase();
+	table = document.querySelector("table");
+	tr=table.getElementsByTagName("tr");
+	
+	for(i = 0; i < tr.length; i++){
+		td=tr[i].getElementsByTagName("td");
+		for(var j = 0; j < td.length; j++){
+			if(td[j]){
+				txtValue=td[j].textContent || td[j].innerText;
+				if(txtValue.toUpperCase().indexOf(filter) > -1){
+					tr[i].style.display="";
+					break;
+			}else{
+				tr[i].style.display="none";
+				}
+			}
+		}
+	}
+}
+
+document.getElementById("searchInput").addEventListener("input",filterTable);
+</script>
+</body>
+</html>
